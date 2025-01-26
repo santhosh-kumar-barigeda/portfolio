@@ -88,5 +88,12 @@ export const skills = [
     image: '/docker.svg',
     darkImage: '/docker.svg',
   },
+  { name: 'Git', description: 'Version control system to track changes and collaborate efficiently.', image: '/git.svg', darkImage: '/git.svg' },
+  {
+    name: 'GitHub',
+    description: 'Platform for hosting, sharing, and collaborating on Git repositories.',
+    image: '/github.svg',
+    darkImage: '/github-dark.svg',
+  },
   { name: 'AWS S3', description: 'Cloud storage for scalable and reliable file management.', image: '/s3.svg', darkImage: '/s3.svg' },
 ];
