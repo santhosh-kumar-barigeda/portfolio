@@ -33,6 +33,7 @@ export function useContactForm() {
       const res = await createContact(data);
       if (res.id) {
         toast.success(`Success! I'll reach out to you soon, ${data.name}.`);
+        form.reset();
       }
     } catch (error) {
       toast.error('Something went wrong!');
