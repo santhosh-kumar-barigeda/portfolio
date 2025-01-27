@@ -57,7 +57,7 @@ export default function ContactsPage() {
     return (
       <div className='dark:bg-background bg-background'>
         <Navbar showLinks={false} />
-        <div className='flex items-center justify-center min-h-screen p-4'>
+        <div className='flex items-center justify-center min-h-screen p-4 overflow-scroll'>
           <div className='max-w-6xl mx-auto'>
             {/* Refresh Button */}
             <Button className='mb-10' size='sm' onClick={fetchData}>
@@ -66,7 +66,7 @@ export default function ContactsPage() {
             </Button>
 
             {/* Contacts Table */}
-            <Table className='w-full max-w-6xl'>
+            <Table className='w-full max-w-6xl overflow-scroll'>
               <TableHeader>
                 <TableRow>
                   <TableHead>Name</TableHead>
