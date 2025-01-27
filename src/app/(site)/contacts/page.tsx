@@ -2,27 +2,36 @@
 
 import { FormEvent, useEffect, useState } from 'react';
 import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
+
+// UI Components
+import { Navbar } from '@/components/navbar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { useRouter } from 'next/navigation';
-import { Navbar } from '@/components/navbar';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { DeleteContact } from '@/components/delete-contact';
-import { getAllContacts } from '@/lib/actions';
+
+// Icons
+import { RefreshCwIcon, TrashIcon } from 'lucide-react';
+
+// Actions
+import { deleteContact, getAllContacts } from '@/lib/actions';
+
+// Types
 import { Contact } from '@prisma/client';
-import { RefreshCwIcon } from 'lucide-react';
 
 export default function ContactsPage() {
+  // States
   const [password, setPassword] = useState('');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const correctPassword = process.env.NEXT_PUBLIC_CONTACTS_PASSWORD;
-  const router = useRouter();
   const [contacts, setContacts] = useState<Contact[]>([]);
 
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value);
-  };
+  // Constants
+  const correctPassword = process.env.NEXT_PUBLIC_CONTACTS_PASSWORD;
+  const router = useRouter();
+
+  // Handlers
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -36,26 +45,27 @@ export default function ContactsPage() {
 
   const fetchData = async () => {
     const data = await getAllContacts();
-
-    if (contacts) {
-      setContacts(data);
-    }
+    if (data) setContacts(data);
   };
 
   useEffect(() => {
-    fetchData();
+    if (isAuthenticated) fetchData();
   }, [isAuthenticated]);
 
+  // Render authenticated view
   if (isAuthenticated) {
     return (
       <div className='dark:bg-background bg-background'>
         <Navbar showLinks={false} />
         <div className='flex items-center justify-center min-h-screen p-4'>
           <div className='max-w-6xl mx-auto'>
-            <Button className='mb-10' size='sm' onClick={async () => await fetchData()}>
+            {/* Refresh Button */}
+            <Button className='mb-10' size='sm' onClick={fetchData}>
               <span>Refresh</span>
               <RefreshCwIcon className='size-4' />
             </Button>
+
+            {/* Contacts Table */}
             <Table className='w-full max-w-6xl'>
               <TableHeader>
                 <TableRow>
@@ -69,7 +79,7 @@ export default function ContactsPage() {
               <TableBody>
                 {contacts.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={4} className='text-center'>
+                    <TableCell colSpan={5} className='text-center'>
                       No contacts available.
                     </TableCell>
                   </TableRow>
@@ -81,7 +91,18 @@ export default function ContactsPage() {
                       <TableCell>{message}</TableCell>
                       <TableCell className='text-nowrap'>{new Date(createdAt).toLocaleString()}</TableCell>
                       <TableCell>
-                        <DeleteContact id={id} />
+                        <Button
+                          variant='ghost'
+                          onClick={async () => {
+                            const res = await deleteContact(id);
+                            if (res.id) {
+                              await fetchData();
+                              toast.success('Deleted!');
+                            }
+                          }}
+                        >
+                          <TrashIcon className='size-4 text-rose-500' />
+                        </Button>
                       </TableCell>
                     </TableRow>
                   ))
@@ -94,23 +115,22 @@ export default function ContactsPage() {
     );
   }
 
+  // Render password prompt
   return (
-    <>
-      <div className='flex items-center justify-center min-h-screen p-4 bg-background'>
-        <Card className='w-full max-w-sm'>
-          <CardHeader>
-            <CardTitle className='text-xl'>Enter Password</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit} className=''>
-              <Input type='password' value={password} onChange={handlePasswordChange} className='w-full mb-4' placeholder='Password' />
-              <Button type='submit' className='w-full'>
-                Submit
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
-      </div>
-    </>
+    <div className='flex items-center justify-center min-h-screen p-4 bg-background'>
+      <Card className='w-full max-w-sm'>
+        <CardHeader>
+          <CardTitle className='text-xl'>Enter Password</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit}>
+            <Input type='password' value={password} onChange={handlePasswordChange} className='w-full mb-4' placeholder='Password' />
+            <Button type='submit' className='w-full'>
+              Submit
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
+    </div>
   );
 }
