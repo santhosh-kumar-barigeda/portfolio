@@ -41,12 +41,12 @@ export const Hero = () => {
 
           <div className='flex items-center gap-3'>
             <Button variant='outline' size='icon'>
-              <a href='https://www.linkedin.com/in/santhosh-kumar-barigeda'>
+              <a href='https://www.linkedin.com/in/santhosh-kumar-barigeda' target='_blank'>
                 <Image src='/linkedin.svg' alt='github' width={100} height={100} className='size-5 object-contain' />
               </a>
             </Button>
             <Button variant='outline' size='icon'>
-              <a href='https://github.com/santhosh-kumar-barigeda'>
+              <a href='https://github.com/santhosh-kumar-barigeda' target='_blank'>
                 <Image src='/github.svg' alt='github' width={100} height={100} className='dark:hidden size-5 object-contain' />
                 <Image src='/github-dark.svg' alt='github' width={100} height={100} className='hidden dark:block size-5 object-contain' />
               </a>
