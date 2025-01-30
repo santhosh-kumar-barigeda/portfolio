@@ -41,7 +41,7 @@ export const Hero = () => {
 
           <div className='flex items-center gap-3'>
             <Button variant='outline' size='icon'>
-              <a href='https://www.linkedin.com/in/santhosh-kumar-sbk/' target='_blank'>
+              <a href='https://www.linkedin.com/in/santhosh-kumar-sbk' target='_blank'>
                 <Image src='/linkedin.svg' alt='github' width={100} height={100} className='size-5 object-contain' />
               </a>
             </Button>
